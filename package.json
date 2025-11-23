@@ -1,5 +1,5 @@
 {
-  "name": "@praj/react-native-time-picker",
+  "name": "@prjd/react-native-time-picker",
   "version": "1.0.0",
   "description": "iOS-inspired time picker for React Native with infinite scrolling and customizable colors",
   "main": "index.ts",
@@ -27,4 +27,3 @@
     "typescript": "^5.0.0"
   }
 }
-

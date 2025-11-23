@@ -1,4 +1,4 @@
-# @praj/react-native-time-picker
+# @prjd/react-native-time-picker
 
 iOS-inspired time picker for React Native with infinite scrolling and customizable colors.
 
