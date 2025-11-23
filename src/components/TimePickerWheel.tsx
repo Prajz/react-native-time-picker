@@ -121,6 +121,7 @@ const TimePickerWheel = forwardRef<
   const flatListRef = useRef<FlatList<string> | null>(null);
   const [flatListRenderKey, setFlatListRenderKey] = useState(0);
   const initialRender = useRef(true);
+  const [selectedIndex, setSelectedIndex] = useState<number>(initialScrollIndex);
 
   const aggressivelyGetLatestDuration = true;
 
@@ -148,6 +149,14 @@ const TimePickerWheel = forwardRef<
         }
         latestDuration.current = newValues.duration;
       }
+      // Calculate the middle item index (center of visible viewport)
+      // The middle is at padWithNItems offset from the top
+      const middleIndex = Math.round(
+        (e.nativeEvent.contentOffset.y +
+          padWithNItems * pickerStyles.pickerItemContainer.height) /
+          pickerStyles.pickerItemContainer.height
+      );
+      setSelectedIndex(middleIndex);
     },
     [
       adjustedLimit.max,
@@ -158,6 +167,7 @@ const TimePickerWheel = forwardRef<
       numberOfItems,
       padWithNItems,
       pickerStyles.pickerItemContainer.height,
+      pickerStyles.pickerItemContainer,
     ]
   );
 
@@ -193,6 +203,13 @@ const TimePickerWheel = forwardRef<
         });
         newValues.duration = adjustedLimit.min;
       }
+      // Calculate and update the middle item index
+      const middleIndex = Math.round(
+        (e.nativeEvent.contentOffset.y +
+          padWithNItems * pickerStyles.pickerItemContainer.height) /
+          pickerStyles.pickerItemContainer.height
+      );
+      setSelectedIndex(middleIndex);
       onValueChange(newValues.duration);
     },
     [
@@ -314,14 +331,15 @@ const TimePickerWheel = forwardRef<
   );
 
   const renderItem = useCallback(
-    ({ item }: { item: string }) => {
+    ({ item, index }: { item: string; index: number }) => {
       const intItem = parseInt(item);
       const isDisabledItem =
         intItem > adjustedLimit.max || intItem < adjustedLimit.min;
 
-      // Determine if this is the selected item (middle of visible area)
-      // This is a simplified check - in a real implementation, we'd track scroll position
-      const isSelected = false; // Will be determined by scroll position
+      // Check if this item is in the middle (selected) position
+      // The middle item is at padWithNItems offset from the top
+      const middleIndex = selectedIndex !== null ? selectedIndex : initialScrollIndex;
+      const isSelected = index === middleIndex;
 
       return (
         <View
@@ -350,6 +368,8 @@ const TimePickerWheel = forwardRef<
       pickerStyles.pickerItemSelected,
       pickerStyles.pickerItemUnselected,
       pickerStyles.disabledPickerItem,
+      selectedIndex,
+      initialScrollIndex,
     ]
   );
 

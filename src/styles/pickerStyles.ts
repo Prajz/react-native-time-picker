@@ -9,7 +9,8 @@ export function generateStyles(customColors?: TimePickerColors) {
   return StyleSheet.create({
     pickerContainer: {
       flexDirection: 'row',
-      marginRight: '8%',
+      justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: colors.backgroundColor,
     },
     pickerLabelContainer: {
