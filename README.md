@@ -22,6 +22,7 @@ npm install @prjd/react-native-time-picker
 
 # Using yarn
 yarn add @prjd/react-native-time-picker
+```
 
 ---
 
