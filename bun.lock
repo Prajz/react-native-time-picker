@@ -5,8 +5,8 @@
     "": {
       "name": "@prjd/react-native-time-picker",
       "dependencies": {
-        "expo-haptics": "*",
-        "expo-linear-gradient": "*",
+        "expo-haptics": ">=12.0.0",
+        "expo-linear-gradient": ">=12.0.0",
       },
       "devDependencies": {
         "@types/react": "^18.2.0",
