@@ -14,8 +14,14 @@ iOS-inspired time picker for React Native with infinite scrolling, customizable 
 ## Installation
 
 ```bash
+# Using bun
 bun add @prjd/react-native-time-picker
-```
+
+# Using npm
+npm install @prjd/react-native-time-picker
+
+# Using yarn
+yarn add @prjd/react-native-time-picker
 
 ---
 
