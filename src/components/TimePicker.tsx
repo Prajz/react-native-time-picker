@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { View, Text } from 'react-native';
-import TimePickerWheel from './TimePickerWheel';
-import { TimePickerProps } from '../types';
-import { generateStyles } from '../styles/pickerStyles';
-import { getSafeInitialValue } from '../utils/getSafeInitialValue';
+import React, { useMemo, useState, useEffect, useRef } from "react";
+import { View, Text } from "react-native";
+import TimePickerWheel from "./TimePickerWheel";
+import { TimePickerProps } from "../types";
+import { generateStyles } from "../styles/pickerStyles";
+import { getSafeInitialValue } from "../utils/getSafeInitialValue";
 
 const TimePicker: React.FC<TimePickerProps> = ({
   initialValue,
@@ -11,15 +11,18 @@ const TimePicker: React.FC<TimePickerProps> = ({
   minuteStep = 1,
   colors,
   isDisabled = false,
+  hapticFeedback = false,
 }) => {
   const styles = useMemo(() => generateStyles(colors), [colors]);
   const safeInitialValue = useMemo(
     () => getSafeInitialValue(initialValue),
-    [initialValue]
+    [initialValue],
   );
 
   const [selectedHours, setSelectedHours] = useState(safeInitialValue.hours);
-  const [selectedMinutes, setSelectedMinutes] = useState(safeInitialValue.minutes);
+  const [selectedMinutes, setSelectedMinutes] = useState(
+    safeInitialValue.minutes,
+  );
 
   const hoursWheelRef = useRef<{
     reset: (options?: { animated?: boolean }) => void;
@@ -43,7 +46,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
   // Generate minute options based on minuteStep
   const minuteOptions = useMemo(() => {
     return Array.from({ length: 60 }, (_, i) => i).filter(
-      (m) => m % minuteStep === 0
+      (m) => m % minuteStep === 0,
     );
   }, [minuteStep]);
 
@@ -51,14 +54,14 @@ const TimePicker: React.FC<TimePickerProps> = ({
   const getValidMinute = (min: number): number => {
     if (minuteOptions.includes(min)) return min;
     const closest = minuteOptions.reduce((prev, curr) =>
-      Math.abs(curr - min) < Math.abs(prev - min) ? curr : prev
+      Math.abs(curr - min) < Math.abs(prev - min) ? curr : prev,
     );
     return closest;
   };
 
   const validMinutes = useMemo(
     () => getValidMinute(safeInitialValue.minutes),
-    [safeInitialValue.minutes, minuteStep]
+    [safeInitialValue.minutes, minuteStep],
   );
 
   useEffect(() => {
@@ -78,8 +81,15 @@ const TimePicker: React.FC<TimePickerProps> = ({
         disableInfiniteScroll={false}
         isDisabled={isDisabled}
         colors={colors}
+        hapticFeedback={hapticFeedback}
       />
-      <Text style={{ fontSize: 25, marginHorizontal: 8, color: colors?.textColor || '#000000' }}>
+      <Text
+        style={{
+          fontSize: 25,
+          marginHorizontal: 8,
+          color: colors?.textColor || "#000000",
+        }}
+      >
         :
       </Text>
       <TimePickerWheel
@@ -93,10 +103,10 @@ const TimePicker: React.FC<TimePickerProps> = ({
         disableInfiniteScroll={false}
         isDisabled={isDisabled}
         colors={colors}
+        hapticFeedback={hapticFeedback}
       />
     </View>
   );
 };
 
 export default React.memo(TimePicker);
-

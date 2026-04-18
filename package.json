@@ -1,25 +1,46 @@
 {
   "name": "@prjd/react-native-time-picker",
-  "version": "1.0.0",
-  "description": "iOS-inspired time picker for React Native with infinite scrolling and customizable colors",
-  "main": "index.ts",
-  "types": "index.ts",
+  "version": "1.0.1",
+  "description": "iOS-inspired time picker for React Native with infinite scrolling, customizable colors, and haptic feedback",
+  "react-native": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "react-native": "./index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "index.ts",
+    "src"
+  ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "tsc"
   },
   "keywords": [
     "react-native",
     "time-picker",
     "ios",
     "picker",
-    "time"
+    "time",
+    "haptics",
+    "expo"
   ],
   "author": "",
   "license": "MIT",
+  "dependencies": {
+    "expo-haptics": ">=12.0.0",
+    "expo-linear-gradient": ">=12.0.0"
+  },
   "peerDependencies": {
     "react": ">=18.2.0",
-    "react-native": ">=0.72.0",
-    "expo-linear-gradient": "*"
+    "react-native": ">=0.72.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",

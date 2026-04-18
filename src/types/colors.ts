@@ -2,35 +2,34 @@
  * Color scheme for the time picker
  */
 export interface TimePickerColors {
-  /** Main accent color (for selected item, buttons) */
+  /** Main accent color — drives buttonBackgroundColor and selectedTextColor when those are not explicitly set */
   primaryColor?: string;
-  /** Text color for picker items */
+  /** Text color for picker items and labels */
   textColor?: string;
-  /** Color for selected/middle item */
+  /** Color for the selected (centre) picker item. Falls back to primaryColor if not set */
   selectedTextColor?: string;
-  /** Color for unselected items */
+  /** Color for unselected/dimmed picker items */
   unselectedTextColor?: string;
-  /** Background color */
+  /** Background color of the picker wheel */
   backgroundColor?: string;
-  /** Modal background color */
+  /** Background color of the modal sheet */
   modalBackgroundColor?: string;
-  /** Button background color */
+  /** Background color of the confirm button. Falls back to primaryColor if not set */
   buttonBackgroundColor?: string;
-  /** Button text color */
+  /** Text color of the confirm button */
   buttonTextColor?: string;
 }
 
 /**
- * Default iOS-inspired colors
+ * Default dark theme colors
  */
 export const defaultColors: Required<TimePickerColors> = {
-  primaryColor: '#007AFF',
-  textColor: '#000000',
-  selectedTextColor: '#000000',
-  unselectedTextColor: '#999999',
-  backgroundColor: '#FFFFFF',
-  modalBackgroundColor: '#FFFFFF',
-  buttonBackgroundColor: '#007AFF',
-  buttonTextColor: '#FFFFFF',
+  primaryColor: "#007AFF",
+  textColor: "#FFFFFF",
+  selectedTextColor: "#FFFFFF",
+  unselectedTextColor: "#555555",
+  backgroundColor: "#000000",
+  modalBackgroundColor: "#000000",
+  buttonBackgroundColor: "#007AFF",
+  buttonTextColor: "#FFFFFF",
 };
-

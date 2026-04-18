@@ -1,4 +1,4 @@
-import { TimePickerColors } from './colors';
+import { TimePickerColors } from "./colors";
 
 export type { TimePickerColors };
 
@@ -18,6 +18,7 @@ export interface TimePickerWheelProps {
   padNumbersWithZero?: boolean;
   limit?: { min?: number; max?: number };
   isDisabled?: boolean;
+  hapticFeedback?: boolean;
   colors?: TimePickerColors;
   styles?: {
     pickerItemContainer?: any;
@@ -33,6 +34,7 @@ export interface TimePickerProps {
   minuteStep?: number;
   colors?: TimePickerColors;
   isDisabled?: boolean;
+  hapticFeedback?: boolean;
 }
 
 export interface TimePickerModalProps {
@@ -45,5 +47,5 @@ export interface TimePickerModalProps {
   colors?: TimePickerColors;
   modalTitle?: string;
   closeOnOverlayPress?: boolean;
+  hapticFeedback?: boolean;
 }
-

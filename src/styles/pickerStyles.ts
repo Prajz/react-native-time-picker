@@ -1,46 +1,60 @@
-import { StyleSheet } from 'react-native';
-import { TimePickerColors, defaultColors } from '../types/colors';
+import { StyleSheet } from "react-native";
+import { TimePickerColors, defaultColors } from "../types/colors";
 
 const ITEM_HEIGHT = 50;
 
 export function generateStyles(customColors?: TimePickerColors) {
-  const colors = { ...defaultColors, ...customColors };
+  const merged = { ...defaultColors, ...customColors };
+
+  // primaryColor is the accent fallback for button background and selected text,
+  // but only when those specific fields aren't explicitly provided by the consumer.
+  const colors: Required<TimePickerColors> = {
+    ...merged,
+    buttonBackgroundColor:
+      customColors?.buttonBackgroundColor ??
+      customColors?.primaryColor ??
+      merged.buttonBackgroundColor,
+    selectedTextColor:
+      customColors?.selectedTextColor ??
+      customColors?.primaryColor ??
+      merged.selectedTextColor,
+  };
 
   return StyleSheet.create({
     pickerContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
       backgroundColor: colors.backgroundColor,
     },
     pickerLabelContainer: {
-      position: 'absolute',
+      position: "absolute",
       right: 4,
       top: 0,
       bottom: 0,
-      justifyContent: 'center',
+      justifyContent: "center",
       minWidth: 25 * 0.65,
     },
     pickerLabel: {
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       marginTop: 25 / 6,
       color: colors.textColor,
     },
     pickerItemContainer: {
-      flexDirection: 'row',
+      flexDirection: "row",
       height: ITEM_HEIGHT,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       width: 25 * 3.6,
     },
     pickerItem: {
-      textAlignVertical: 'center',
+      textAlignVertical: "center",
       fontSize: 25,
       color: colors.textColor,
     },
     pickerItemSelected: {
-      fontWeight: '600',
+      fontWeight: "600",
       color: colors.selectedTextColor,
     },
     pickerItemUnselected: {
@@ -53,22 +67,22 @@ export function generateStyles(customColors?: TimePickerColors) {
       opacity: 0.2,
     },
     pickerGradientOverlay: {
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
+      position: "absolute",
+      width: "100%",
+      height: "100%",
     },
     durationScrollFlatList: {
       minWidth: 1,
-      width: '300%',
+      width: "300%",
     },
     durationScrollFlatListContainer: {
-      overflow: 'visible',
+      overflow: "visible",
     },
     durationScrollFlatListContentContainer: {},
     // Modal styles
     modalBackdrop: {
       flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      backgroundColor: "rgba(0, 0, 0, 0.4)",
     },
     modalContent: {
       backgroundColor: colors.modalBackgroundColor,
@@ -76,17 +90,17 @@ export function generateStyles(customColors?: TimePickerColors) {
       borderTopRightRadius: 20,
       padding: 20,
       paddingBottom: 40,
-      maxHeight: '70%',
+      maxHeight: "70%",
     },
     modalTitle: {
       fontSize: 18,
-      fontWeight: '600',
+      fontWeight: "600",
       color: colors.textColor,
       marginBottom: 20,
     },
     buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       marginTop: 20,
       gap: 12,
     },
@@ -94,8 +108,8 @@ export function generateStyles(customColors?: TimePickerColors) {
       flex: 1,
       paddingVertical: 14,
       borderRadius: 12,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
     confirmButton: {
       backgroundColor: colors.buttonBackgroundColor,
@@ -107,7 +121,7 @@ export function generateStyles(customColors?: TimePickerColors) {
     },
     buttonText: {
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "600",
     },
     confirmButtonText: {
       color: colors.buttonTextColor,
@@ -119,4 +133,3 @@ export function generateStyles(customColors?: TimePickerColors) {
 }
 
 export { ITEM_HEIGHT };
-

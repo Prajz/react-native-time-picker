@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useCallback, useMemo, useState } from 'react';
+import React, {
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import {
   View,
   Text,
@@ -8,11 +14,11 @@ import {
   Animated,
   Easing,
   useWindowDimensions,
-} from 'react-native';
-import TimePicker from './TimePicker';
-import { TimePickerModalProps, TimeValue } from '../types';
-import { generateStyles } from '../styles/pickerStyles';
-import { getSafeInitialValue } from '../utils/getSafeInitialValue';
+} from "react-native";
+import TimePicker from "./TimePicker";
+import { TimePickerModalProps, TimeValue } from "../types";
+import { generateStyles } from "../styles/pickerStyles";
+import { getSafeInitialValue } from "../utils/getSafeInitialValue";
 
 const TimePickerModal: React.FC<TimePickerModalProps> = ({
   visible,
@@ -24,13 +30,14 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
   colors,
   modalTitle,
   closeOnOverlayPress = true,
+  hapticFeedback = false,
 }) => {
   const styles = useMemo(() => generateStyles(colors), [colors]);
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 
   const safeInitialValue = useMemo(
     () => getSafeInitialValue(initialValue),
-    [initialValue]
+    [initialValue],
   );
 
   const [selectedDuration, setSelectedDuration] =
@@ -77,7 +84,7 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
         translateY: animatedOpacity.current.interpolate({
           inputRange: [0, 1],
           outputRange: [screenHeight, 0],
-          extrapolate: 'clamp',
+          extrapolate: "clamp",
         }),
       },
     ],
@@ -129,12 +136,9 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
     onCancel?.();
   }, [confirmedDuration, hide, onCancel]);
 
-  const durationChangeHandler = useCallback(
-    (duration: TimeValue) => {
-      setSelectedDuration(duration);
-    },
-    []
-  );
+  const durationChangeHandler = useCallback((duration: TimeValue) => {
+    setSelectedDuration(duration);
+  }, []);
 
   return (
     <Modal
@@ -170,6 +174,7 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
           onTimeChange={durationChangeHandler}
           minuteStep={minuteStep}
           colors={colors}
+          hapticFeedback={hapticFeedback}
         />
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -195,4 +200,3 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({
 };
 
 export default React.memo(TimePickerModal);
-

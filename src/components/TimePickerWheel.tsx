@@ -6,16 +6,17 @@ import React, {
   useCallback,
   forwardRef,
   useImperativeHandle,
-} from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { generateNumbers } from '../utils/generateNumbers';
-import { getDurationAndIndexFromScrollOffset } from '../utils/getDurationAndIndexFromScrollOffset';
-import { getInitialScrollIndex } from '../utils/getInitialScrollIndex';
-import { getAdjustedLimit } from '../utils/getAdjustedLimit';
-import { colorToRgba } from '../utils/colorToRgba';
-import { TimePickerWheelProps } from '../types';
-import { generateStyles, ITEM_HEIGHT } from '../styles/pickerStyles';
+} from "react";
+import { View, Text, FlatList, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { generateNumbers } from "../utils/generateNumbers";
+import { getDurationAndIndexFromScrollOffset } from "../utils/getDurationAndIndexFromScrollOffset";
+import { getInitialScrollIndex } from "../utils/getInitialScrollIndex";
+import { getAdjustedLimit } from "../utils/getAdjustedLimit";
+import { colorToRgba } from "../utils/colorToRgba";
+import { TimePickerWheelProps } from "../types";
+import { triggerSelectionHaptic } from "../utils/haptics";
+import { generateStyles, ITEM_HEIGHT } from "../styles/pickerStyles";
 
 const keyExtractor = (_item: string, index: number) => index.toString();
 
@@ -37,6 +38,7 @@ const TimePickerWheel = forwardRef<
     padNumbersWithZero = false,
     limit,
     isDisabled = false,
+    hapticFeedback = false,
     colors,
     styles: customStyles,
   } = props;
@@ -47,7 +49,7 @@ const TimePickerWheel = forwardRef<
       ...styles,
       ...customStyles,
     }),
-    [styles, customStyles]
+    [styles, customStyles],
   );
 
   const numberOfItems = useMemo(() => {
@@ -86,7 +88,7 @@ const TimePickerWheel = forwardRef<
       padNumbersWithZero,
       padWithNItems,
       safeRepeatNumbersNTimes,
-    ]
+    ],
   );
 
   const initialScrollIndex = useMemo(
@@ -106,12 +108,12 @@ const TimePickerWheel = forwardRef<
       numberOfItems,
       padWithNItems,
       safeRepeatNumbersNTimes,
-    ]
+    ],
   );
 
   const adjustedLimit = useMemo(
     () => getAdjustedLimit(limit, numberOfItems, interval),
-    [interval, limit, numberOfItems]
+    [interval, limit, numberOfItems],
   );
 
   const numberOfItemsToShow = 1 + padWithNItems * 2;
@@ -121,7 +123,8 @@ const TimePickerWheel = forwardRef<
   const flatListRef = useRef<FlatList<string> | null>(null);
   const [flatListRenderKey, setFlatListRenderKey] = useState(0);
   const initialRender = useRef(true);
-  const [selectedIndex, setSelectedIndex] = useState<number>(initialScrollIndex);
+  const [selectedIndex, setSelectedIndex] =
+    useState<number>(initialScrollIndex);
 
   const aggressivelyGetLatestDuration = true;
 
@@ -148,13 +151,16 @@ const TimePickerWheel = forwardRef<
           newValues.duration = adjustedLimit.min;
         }
         latestDuration.current = newValues.duration;
+        if (hapticFeedback) {
+          triggerSelectionHaptic();
+        }
       }
       // Calculate the middle item index (center of visible viewport)
       // The middle is at padWithNItems offset from the top
       const middleIndex = Math.round(
         (e.nativeEvent.contentOffset.y +
           padWithNItems * pickerStyles.pickerItemContainer.height) /
-          pickerStyles.pickerItemContainer.height
+          pickerStyles.pickerItemContainer.height,
       );
       setSelectedIndex(middleIndex);
     },
@@ -163,12 +169,13 @@ const TimePickerWheel = forwardRef<
       adjustedLimit.min,
       aggressivelyGetLatestDuration,
       disableInfiniteScroll,
+      hapticFeedback,
       interval,
       numberOfItems,
       padWithNItems,
       pickerStyles.pickerItemContainer.height,
       pickerStyles.pickerItemContainer,
-    ]
+    ],
   );
 
   const onMomentumScrollEnd = useCallback(
@@ -188,7 +195,8 @@ const TimePickerWheel = forwardRef<
           newValues.index - (newValues.duration - adjustedLimit.max);
         flatListRef.current?.scrollToIndex({
           animated: true,
-          index: targetScrollIndex >= 0 ? targetScrollIndex : adjustedLimit.max - 1,
+          index:
+            targetScrollIndex >= 0 ? targetScrollIndex : adjustedLimit.max - 1,
         });
         newValues.duration = adjustedLimit.max;
       } else if (newValues.duration < adjustedLimit.min) {
@@ -207,7 +215,7 @@ const TimePickerWheel = forwardRef<
       const middleIndex = Math.round(
         (e.nativeEvent.contentOffset.y +
           padWithNItems * pickerStyles.pickerItemContainer.height) /
-          pickerStyles.pickerItemContainer.height
+          pickerStyles.pickerItemContainer.height,
       );
       setSelectedIndex(middleIndex);
       onValueChange(newValues.duration);
@@ -222,7 +230,7 @@ const TimePickerWheel = forwardRef<
       adjustedLimit.min,
       onValueChange,
       numbersForFlatList.length,
-    ]
+    ],
   );
 
   const onViewableItemsChanged = useCallback(
@@ -249,7 +257,7 @@ const TimePickerWheel = forwardRef<
         });
       }
     },
-    [numberOfItems, safeRepeatNumbersNTimes]
+    [numberOfItems, safeRepeatNumbersNTimes],
   );
 
   const [viewabilityConfigCallbackPairs, setViewabilityConfigCallbackPairs] =
@@ -263,7 +271,7 @@ const TimePickerWheel = forwardRef<
               onViewableItemsChanged,
             },
           ]
-        : undefined
+        : undefined,
     );
 
   useEffect(() => {
@@ -283,7 +291,7 @@ const TimePickerWheel = forwardRef<
               onViewableItemsChanged,
             },
           ]
-        : undefined
+        : undefined,
     );
   }, [disableInfiniteScroll, onViewableItemsChanged]);
 
@@ -293,7 +301,7 @@ const TimePickerWheel = forwardRef<
       offset: pickerStyles.pickerItemContainer.height * index,
       index,
     }),
-    [pickerStyles.pickerItemContainer.height]
+    [pickerStyles.pickerItemContainer.height],
   );
 
   useImperativeHandle(
@@ -327,7 +335,7 @@ const TimePickerWheel = forwardRef<
       numberOfItems,
       padWithNItems,
       safeRepeatNumbersNTimes,
-    ]
+    ],
   );
 
   const renderItem = useCallback(
@@ -338,14 +346,12 @@ const TimePickerWheel = forwardRef<
 
       // Check if this item is in the middle (selected) position
       // The middle item is at padWithNItems offset from the top
-      const middleIndex = selectedIndex !== null ? selectedIndex : initialScrollIndex;
+      const middleIndex =
+        selectedIndex !== null ? selectedIndex : initialScrollIndex;
       const isSelected = index === middleIndex;
 
       return (
-        <View
-          style={pickerStyles.pickerItemContainer}
-          testID="picker-item"
-        >
+        <View style={pickerStyles.pickerItemContainer} testID="picker-item">
           <Text
             style={[
               pickerStyles.pickerItem,
@@ -370,12 +376,12 @@ const TimePickerWheel = forwardRef<
       pickerStyles.disabledPickerItem,
       selectedIndex,
       initialScrollIndex,
-    ]
+    ],
   );
 
   const renderLinearGradient = useMemo(() => {
     const backgroundColor =
-      pickerStyles.pickerContainer.backgroundColor ?? '#FFFFFF';
+      pickerStyles.pickerContainer.backgroundColor ?? "#000000";
     const transparentBackgroundColor = colorToRgba(backgroundColor, 0);
 
     const gradientHeight =
@@ -394,19 +400,23 @@ const TimePickerWheel = forwardRef<
         style={pickerStyles.pickerGradientOverlay}
       />
     );
-  }, [padWithNItems, pickerStyles.pickerContainer.backgroundColor, pickerStyles.pickerGradientOverlay]);
+  }, [
+    padWithNItems,
+    pickerStyles.pickerContainer.backgroundColor,
+    pickerStyles.pickerGradientOverlay,
+  ]);
 
   const snapToOffsets = useMemo(
     () =>
       [...Array(numbersForFlatList.length)].map(
-        (_, i) => i * pickerStyles.pickerItemContainer.height
+        (_, i) => i * pickerStyles.pickerItemContainer.height,
       ),
-    [numbersForFlatList.length, pickerStyles.pickerItemContainer.height]
+    [numbersForFlatList.length, pickerStyles.pickerItemContainer.height],
   );
 
   return (
     <View
-      pointerEvents={isDisabled ? 'none' : undefined}
+      pointerEvents={isDisabled ? "none" : undefined}
       style={[
         pickerStyles.durationScrollFlatListContainer,
         {
@@ -445,7 +455,6 @@ const TimePickerWheel = forwardRef<
   );
 });
 
-TimePickerWheel.displayName = 'TimePickerWheel';
+TimePickerWheel.displayName = "TimePickerWheel";
 
 export default React.memo(TimePickerWheel);
-
